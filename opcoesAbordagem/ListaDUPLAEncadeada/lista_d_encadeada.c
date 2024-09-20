@@ -4,6 +4,13 @@
 #include "lista_d_encadeada.h"
 #include "item.h"
 
+
+typedef struct no_{
+    ITEM* item;
+    NO* anterior;
+    NO* proximo;
+}NO;
+
 struct lista_{
     int tamanho;
     NO* inicio;
@@ -11,10 +18,13 @@ struct lista_{
     bool ordenada;
 };
 
-typedef struct no_{
-    NO* anterior;
-    NO* proximo;
-}NO;
+// Protocolos
+bool lista_inserir_busca_ordenada(LISTA* lista, int chave);
+bool lista_cheia(LISTA *lista);
+LISTA *lista_criar(bool ordenada);
+bool lista_vazia(LISTA *lista);
+bool lista_inserir(LISTA *lista, ITEM *item);
+ITEM *lista_remover(LISTA *lista, int chave);
 
 
 LISTA *lista_criar(bool ordenada)
@@ -44,6 +54,7 @@ bool lista_cheia(LISTA *lista)
         return true;
 
     }
+    return false;
 }
 
 bool lista_vazia(LISTA *lista)
@@ -55,6 +66,7 @@ bool lista_inserir(LISTA *lista, ITEM *item)
 {
     if(!lista_cheia(lista)){
         NO* aux = (NO*) malloc(sizeof(NO));
+        aux->item = item;
         if(!lista->ordenada){
 
             // apenas insere no fim;
@@ -97,7 +109,7 @@ bool lista_inserir_busca_ordenada(LISTA* lista, int chave)
     // depois é so colocar o fila->inicio no aux.
 
 
-    if(chave == item_get_chave(aux)){
+    if(chave == item_get_chave(aux->item)){
         NO* aux = (NO*) malloc(sizeof(NO));
 
         aux->proximo = lista->inicio->proximo;
@@ -116,7 +128,7 @@ bool lista_inserir_busca_ordenada(LISTA* lista, int chave)
         
     }
 
-    else if(chave == item_get_chave(lista->fim)){
+    else if(chave == item_get_chave(lista->fim->item)){
         NO* aux = (NO*) malloc(sizeof(NO));
 
         lista->fim->proximo = aux;
@@ -144,15 +156,18 @@ bool lista_inserir_busca_ordenada(LISTA* lista, int chave)
             return true;
         }
     }
+
+    return false;
 }
 
-ITEM *lista_remover(LISTA *lista, int chave){
+ITEM *lista_remover(LISTA *lista, int chave)
+{
     if(!lista_vazia(lista)){
         // fazer uma busca sequencial
 
         NO* aux = lista->inicio;
 
-        if(item_get_chave(aux) == chave){
+        if(item_get_chave(aux->item) == chave){
             ITEM *iaux = lista->inicio->item;
 
             lista->inicio->proximo->anterior = NULL;
@@ -170,7 +185,7 @@ ITEM *lista_remover(LISTA *lista, int chave){
 
         // O(1) direto
         if(aux == lista->fim){
-            if(item_get_chave(lista->fim) == chave){
+            if(item_get_chave(lista->fim->item) == chave){
                 ITEM *iAux = lista->fim->item;
                 lista->fim->anterior = NULL;
                 free(lista->fim);
@@ -184,7 +199,7 @@ ITEM *lista_remover(LISTA *lista, int chave){
             ITEM *iAux = aux->proximo->item;
             
             aux->proximo = aux->proximo->proximo;
-            aux-proximo->anterior = NULL;
+            aux->proximo->anterior = NULL;
             aux->proximo->proximo = NULL;
 
             lista->tamanho--;
@@ -195,4 +210,5 @@ ITEM *lista_remover(LISTA *lista, int chave){
 
 
     }
+    return NULL;
 }
