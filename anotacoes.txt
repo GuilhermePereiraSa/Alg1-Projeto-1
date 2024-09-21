@@ -1,4 +1,25 @@
-A ideia é usar uma pilha sequencial e diminuir pra O(n - 1) as outras n-1 cidades, pra ficar tipo uma busca 
+    A ideia é usar uma pilha sequencial e diminuir pra O(n - 1) as outras n-1 cidades, pra ficar tipo uma busca 
 sequencial. Distância de AB_(1) vai ser empilhada, seguindo nao operações comuns da pilha de soma, etc, mas sim de
-comparação. Fazemos então um compare para a Pilha, para reutilizarmos isso para o resto das opções.
+comparação. Fazemos então um "compare" para a Pilha, para reutilizarmos isso para o resto das opções.
+Exemplo:
+● Arquivo de entrada
+4 - n cidades
+2 - origem
+5 - n arestas
 
+(*)
+1 2 10
+1 3 15
+1 4 20
+2 4 25
+3 4 30
+
+as n arestas indicam quantas possibilidades serão colocadas logo após, que é justamente o (*).
+Agora, estudando o geral, visualizando como Cidade A | Cidade B | Distância, como um vetor só, numa pilha
+sequencial, se soubermos o tamanho, então, ficaríamos com: {1,2,10, 1, 3, 15, 1,4,20, 2, 4, 25, 3, 4, 30}.
+
+O 2, que é o inicial, tem possibilidades de ir para o 1 ou 4. Ele opta pelo 1, por menor distância. Agora
+precisamos ir da Cidade B, primeira iteração, e interpretá-la como Cidade A, para uma outra Cidade, no caso,
+agora uma Cidade B. 1 opta por 3, que tem valor 15 apenas, agora, seguindo subsequentemente, a 3 não podendo
+voltar para a 1, e nem podendo ir para a 2, não por falta de aresta (também tem isso), mas por que é a última
+Cidade que deve ser contemplada. 3 opta então pela 4 por falta de opção. E da 4 só falta irmos para a 2.
