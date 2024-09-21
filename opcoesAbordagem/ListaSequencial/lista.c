@@ -17,6 +17,12 @@ bool lista_cheia(LISTA *lista);
 bool lista_inserir_fim(LISTA *lista, ITEM *item);
 bool lista_inserir_meio(LISTA *lista, int pos, ITEM *item);
 bool lista_vazia(LISTA *lista);
+void lista_shiftar_fim(LISTA *lista, int pos);
+int lista_busca_binaria(LISTA *lista, int x);
+
+void quicksort(LISTA *lista, int low, int high);
+int partition(LISTA *lista, int low, int high);
+
 
 //  true ou false para parâmetro - ordenada ou não -> Inserção, remoção, busca
 LISTA *lista_criar(bool ordenada) {
@@ -135,7 +141,6 @@ int lista_busca_sequencial_ordenada(LISTA *lista, int x) {
   }
 }
 
-
 ITEM *lista_remover(LISTA *lista, int x) {
   // achando a chave -> retorna item
   int pos;
@@ -148,54 +153,71 @@ ITEM *lista_remover(LISTA *lista, int x) {
     }
     lista_shiftar_fim(lista, pos);
   }
+  return NULL;
 }
 
+// Busca binária para uma lista ordenada
 int lista_busca_binaria(LISTA *lista, int x) {
   int inf = 0;
   int sup = lista->fim - 1;
 
   while (inf != sup) {
     int meio = (sup + inf) / 2;
-    if (lista->lista[meio] == x) {
+    if (item_get_chave(lista->lista[meio]) == x) {
       return (meio + 1);
     }
 
-    else if (lista->lista[meio] < x) {
+    else if (item_get_chave(lista->lista[meio]) < x) {
       sup = meio - 1;
     }
 
-    else if (lista->lista[meio] > x) {
+    else if (item_get_chave(lista->lista[meio]) > x) {
       inf = meio + 1;
     }
   }
+
+  return -1;
 }
 
-void quicksort(LISTA *lista, int low, int high) {
-
-  int pi = partition(lista->lista, low, high);
-  // antes e depois da partição
-  quicksort(lista->lista, low, pi - 1);
-  quicksort(lista->lista, pi + 1, high);
-}
 
 int partition(LISTA *lista, int low, int high) {
-  int i = low - 1;
-  int pivot = lista->lista[high];
+    int i = low - 1;
+    int pivot = item_get_chave(lista->lista[high]);  // Escolhendo o último elemento como pivot
 
-  for (int j = low; j < high; j++) {
-    if (lista->lista[j] <= pivot) {
-      i++;
-      int temp = lista->lista[j];
-      lista->lista[j] = lista->lista[i];
-      lista->lista[i] = temp;
+    for (int j = low; j < high; j++) {
+        if (item_get_chave(lista->lista[j]) <= pivot) {
+            i++;
+            // Troca lista[i] e lista[j]
+            int temp = item_get_chave(lista->lista[j]);
+
+            // Substitui item diretamente em vez de usar item_get_chave
+            lista->lista[j] = lista->lista[i];
+            item_set_chave(lista->lista[i], temp);  // Isso deve ser uma atribuição válida de item
+
+            // Ou, caso precise usar setters/getters:
+            // item_set_chave(lista->lista[i], temp);  // Usando função para atribuição, se existir
+        }
     }
-  }
 
-  int temp = lista->lista[i + 1];
-  lista->lista[i + 1] = lista->lista[high];
-  lista->lista[high] = temp;
+    // Troca lista[i+1] e lista[high] (pivot)
+    int temp = item_get_chave(lista->lista[i + 1]);
+    lista->lista[i + 1] = lista->lista[high];
+    item_set_chave(lista->lista[high], temp);
 
-  return (i + 1);
+    return (i + 1);  // Retorna o índice da partição
+}
+
+
+
+void quicksort(LISTA *lista, int low, int high) {
+    if (low < high) {
+        // Índice da partição
+        int pi = partition(lista, low, high);
+
+        // Ordena as partes antes e depois da partição
+        quicksort(lista, low, pi - 1);
+        quicksort(lista, pi + 1, high);
+    }
 }
 
 void lista_imprimir(LISTA *lista) {
@@ -204,6 +226,7 @@ void lista_imprimir(LISTA *lista) {
   }
 }
 
+/*
 int main(void) {
   LISTA *lista;
   lista = lista_criar(0);
@@ -216,14 +239,12 @@ int main(void) {
   for (int i = 0; i < n; i++) {
     scanf("%d", &valor);
 
-    if (valor != NULL) {
-      item = item_criar(valor, 0);
-      lista_inserir_fim(lista, item);
-    }
+    item = item_criar(valor, 0);
+    lista_inserir_fim(lista, item);
   }
-
   quicksort(lista, 0, n - 1);
   lista_imprimir(lista);
 
   return 0;
 }
+*/
