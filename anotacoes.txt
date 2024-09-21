@@ -23,3 +23,6 @@ precisamos ir da Cidade B, primeira iteração, e interpretá-la como Cidade A, 
 agora uma Cidade B. 1 opta por 3, que tem valor 15 apenas, agora, seguindo subsequentemente, a 3 não podendo
 voltar para a 1, e nem podendo ir para a 2, não por falta de aresta (também tem isso), mas por que é a última
 Cidade que deve ser contemplada. 3 opta então pela 4 por falta de opção. E da 4 só falta irmos para a 2.
+
+Além do mais, não podemos esquecer que cada ida tem seu valor de distância, que deve ser incrementado ao final
+de tudo. 
