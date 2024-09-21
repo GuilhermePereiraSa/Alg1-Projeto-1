@@ -1,0 +1,4 @@
+A ideia é usar uma pilha sequencial e diminuir pra O(n - 1) as outras n-1 cidades, pra ficar tipo uma busca 
+sequencial. Distância de AB_(1) vai ser empilhada, seguindo nao operações comuns da pilha de soma, etc, mas sim de
+comparação. Fazemos então um compare para a Pilha, para reutilizarmos isso para o resto das opções.
+
