@@ -3,10 +3,10 @@
     #define PILHA_H
     
     #include <stdbool.h>
-    #include <item.h>
+    #include "item.h"
     
     typedef struct pilha PILHA;
-    #define TAM 100
+    #define TAM 5200
 
     PILHA *pilha_criar(void);
     void pilha_apagar(PILHA **pilha);

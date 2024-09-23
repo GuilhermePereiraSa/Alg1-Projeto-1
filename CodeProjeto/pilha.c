@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include <item.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <pilha.h>
+#include "pilha.h"
+#include "item.h"
 
 // Protocolos das funções
 PILHA* pilha_criar(void);

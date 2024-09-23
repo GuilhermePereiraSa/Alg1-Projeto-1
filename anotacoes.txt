@@ -1,3 +1,26 @@
+Permutação Direta:
+Para n cidades, existem (n - 1)! possíveis rotas (supondo que a cidade de partida seja fixada).
+Para cada rota, você calcula a soma das distâncias entre as cidades em ordem.
+
+Empilhar por comparação cidades e desempilhar ao finalizar uma análise de rota mais curta.
+
+
+Melhoria dentro da Força Bruta: "Backtracking Otimizado"
+Uma maneira de melhorar marginalmente a eficiência dentro da abordagem de força bruta (sem abandonar a filosofia brute force) 
+é utilizar uma técnica chamada backtracking otimizado:
+
+*Você "poda" sub-"bons" caminhos.
+Enquanto você está construindo as rotas, abandone rotas que já são piores do que a melhor encontrada até o momento. Ou seja, 
+se a rota parcial que você está explorando já é mais cara do que a melhor rota encontrada até então, você pode parar de explorar essa rota.
+Exemplo: Se em algum ponto intermediário você já acumulou um custo que ultrapassa a menor rota conhecida, você para de construir essa rota (poda o ramo).
+
+Complexidade:
+
+Ainda é O(n!), mas, na prática, essa técnica pode economizar tempo considerável, especialmente se existirem rotas claramente ruins a serem eliminadas cedo.
+
+
+
+
     A ideia é usar uma pilha sequencial e diminuir pra O(n - 1) as outras n-1 cidades, pra ficar tipo uma busca 
 sequencial. Distância de AB_(1) vai ser empilhada, seguindo nao operações comuns da pilha de soma, etc, mas sim de
 comparação. Fazemos então um "compare" para a Pilha, para reutilizarmos isso para o resto das opções.

@@ -2,10 +2,10 @@
 #include <stdio.h>
 #include "item.h"
 
-struct item_{ 
+typedef struct item_{ 
         int chave;   //indexador
         void *dados; //ponteiro para o dado
-};
+}ITEM;
 
 ITEM *item_criar (int chave, void *dado){
           ITEM *item;
