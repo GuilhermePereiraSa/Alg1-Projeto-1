@@ -1,5 +1,3 @@
-//cliente do Problema do Caixeiro Vaijante.
-
 /*
     No Problema do Caixeiro Viajante precisamos optar pela escolha
     mais eficiente de um caixeiro viajante ir em todas as cidades possíveis 
@@ -25,10 +23,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
-
 // #include "pilha.h"
-// Isolaremos os arquivos de código numa pasta
-// só para não termos problema com
 
 typedef struct {
     int cidadeA;
