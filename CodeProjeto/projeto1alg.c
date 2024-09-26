@@ -1,79 +1,100 @@
 /*
-    No Problema do Caixeiro Viajante precisamos optar pela escolha
-    mais eficiente de um caixeiro viajante ir em todas as cidades possíveis 
-    no menor custo possível de distância. 
+	No Problema do Caixeiro Viajante precisamos optar pela escolha
+	mais eficiente de um caixeiro viajante ir em todas as cidades possíveis
+	no menor custo possível de distância.
 
-    A leitura será feita por um programa externo:
-    CIDADE A | CIDADE B | Distância 
-        1         2           3
-        1         3           4
-        1         4           2
-        2         1           5
-        ...
+	A leitura será feita por um programa externo:
+	CIDADE A | CIDADE B | Distância
+		1         2           3
+		1         3           4
+		1         4           2
+		2         1           5
+		...
 
-        então, a n-enésima cidade A, onde estamos no momento, irá para o resto das
-        outras cidades (n-1 cidades possíveis). Este é um problema de análise combinatória
-        com a relação do menor custo das distâncias.
+		então, a n-enésima cidade A, onde estamos no momento, irá para o resto
+   das outras cidades (n-1 cidades possíveis). Este é um problema de análise
+   combinatória com a relação do menor custo das distâncias.
 
-    Além disso, escolhe-se no programa qual será a cidade de origem.
+	Além disso, escolhe-se no programa qual será a cidade de origem.
 
-    Precisa-se no final do programa mostrar a rota e o custo.
+	Precisa-se no final do programa mostrar a rota e o custo.
 */
 
-#include <stdio.h>
+#include "item.h"
+#include "pilha.h"
+#include <limits.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
-// #include "pilha.h"
 
 typedef struct {
-    int cidadeA;
-    int cidadeB;
-    int distancia;
-    // exatidão 
-}Aresta;
+  int cidadeA;
+  int cidadeB;
+  int distancia;
+  // exatidão
+} Aresta;
 
 
-int main(int arcv,char *argc[] ){
 
-    FILE *arq;
-    arq = fopen(&argc[0][1], "r");
-    if(arq == NULL){
-        printf("Erro ao abrir o arquivo \n");
-        return -1;
-    }
+int main(int arcv, char *argc[]) {
 
-    int numCidades, cidadeOrigem, numArestas;
+  FILE *arq;
+  arq = fopen(&argc[0][1], "r");
+  if (arq == NULL) {
+	printf("Erro ao abrir o arquivo \n");
+	return -1;
+  }
 
-    // Ler nº de Cidades e a cidade de origem, que está na 
-    // linha seguinte.
-    fscanf(arq, "%d", numCidades);  
-    fscanf(arq, "%d", cidadeOrigem);
+  int numCidades, cidadeOrigem, numArestas;
 
-    fscanf(arq, "%d", numArestas);
-    // Podemos usar um vetor, do tipo Arestas 
-    // para colocarmos o nº total de arestas.
+  // Ler nº de Cidades e a cidade de origem, que está na
+  // linha seguinte.
+  fscanf(arq, "%d", &numCidades);
+  fscanf(arq, "%d", &cidadeOrigem);
 
-    // E, além do mais, Aresta possui cidade A e B, 
-    // e a distância percorrida.
+  fscanf(arq, "%d", &numArestas);
+  // Podemos usar um vetor, do tipo Arestas
+  // para colocarmos o nº total de arestas.
 
-    Aresta arestas[numArestas];
-    for(int i=0; i<numArestas; i++){
-        fscanf(arq, "%d %d %d", &arestas[i].cidadeA,
-        &arestas[i].cidadeB, &arestas[i].distancia);
-        // agora todos estão "sincronizados"
-    }
-    // ja lemos tudo que tinhamos pra ler;
-    fclose(arq);
+  // E, além do mais, Aresta possui cidade A e B,
+  // e a distância percorrida.
 
-    // chamadas para:
-    // empilhar a cidade de origem primeiro.
-    // marcar ela como já visitada;
+  Aresta arestas[numArestas];
+  for (int i = 0; i < numArestas; i++) {
+	fscanf(arq, "%d %d %d", &arestas[i].cidadeA, &arestas[i].cidadeB,
+		   &arestas[i].distancia);
+	// agora todos estão "sincronizados"
+  }
+  // ja lemos tudo que tinhamos pra ler;
+  fclose(arq);
 
-    // permutar o resto das cidades em relação a ela
-    // permutar seria (n-1)!, sendo n! o pior caso
-    // dos algoritmos.
+  // PILHA melhorRota <-> ao encontrarmos uma solução local ótima
+  // podemos empilhá-la; Nossos itens serão as cidades, claro ainda nao tenha
+  // ficado claro
 
-    //calcularCusto necessário.
+  PILHA *pilha, *melhorRota;
 
+  pilha = pilha_criar();
+  melhorRota = pilha_criar();
 
+  bool visitadas[TAM] = {false};
+  visitadas[cidadeOrigem] = true;
+  ITEM *item = item_criar(cidadeOrigem, 0);
+  pilha_empilhar(pilha, item);
+
+	int menorCusto = INT_MAX; 
+	// iniciamos com um valor muito grande para quando
+	// encontrarmos qualquer valor, solução local, ela já ser "validada"
+
+  // Função de permutar o resto das cidades em relação a ela
+	// nela será chamada as funções de encontrarMelhorRota, CalcularCusto.
+
+	//permutar();
+
+	printf("Melhor rota: \n");
+	// pilha_topo devolve um item, logo, precisamos pegar sua chave.
+	pilha_print(melhorRota);
+	printf("\n");
+	printf("Menor custo: %d\n", menorCusto);
 }
+

@@ -106,3 +106,13 @@ void pilha_apagar(PILHA **pilha){
     free(*pilha);
     *pilha = NULL;
 }
+
+
+void pilha_print(PILHA *pilha){
+    for(int i=0; i < pilha->tamanho; i++){
+        if(i == pilha->tamanho - 1)
+            printf("%d", item_get_chave(pilha->item[i]));
+        
+        printf("%d - ", item_get_chave(pilha->item[i]));
+    }
+}
