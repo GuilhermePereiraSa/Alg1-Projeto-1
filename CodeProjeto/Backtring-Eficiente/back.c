@@ -61,8 +61,10 @@ void explorarRotas(Aresta arestas[], int numArestas, int numCidades, PILHA* pilh
                 explorarRotas(arestas, numArestas, numCidades, pilha, visitado, i, custoAtual + distancia, menorCusto, melhorRota);
 
                 // Desempilha e marca como não visitada (backtrack)
-                item_apagar((pilha_desempilhar(pilha)));
+                ITEM *item = pilha_desempilhar(pilha);
+                item_apagar(&item);
                 visitado[i] = false;
+
             }
         }
     }
