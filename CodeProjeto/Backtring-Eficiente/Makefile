@@ -1,19 +1,27 @@
-all: projeto
+back: item.o pilha.o back.o
+	gcc -Wall -std=c99 item.o pilha.o back.o -o backtracking
 
-projeto: projeto.o pilha.o item.o
-	gcc -Wall -std=c99 projeto.o pilha.o item.o -o projeto
+back.o:
+	gcc -c back.c
 
-projeto.o: projeto1alg.c pilha.h item.h
-	gcc -Wall -std=c99 -c projeto1alg.c
+time-back: item.o pilha.o time-back-perm.o
+	gcc -Wall -std=c99 item.o pilha.o time-back-perm.o -o time-backtracking
 
-item.o: item.c item.h
-	gcc -c item.c
+time-back-perm.o:
+	gcc -c time-back-perm.c
 
-pilha.o: pilha.c pilha.h
-	gcc -c pilha.c
+item.o: ../item.c ../item.h
+	gcc -c ../item.c
 
-run: projeto
-	./projeto
-	
+pilha.o: ../pilha.c ../pilha.h
+	gcc -c ../pilha.c
+
+run-back:
+	./backtracking
+
+run-time-back:
+	./time-backtracking
+
 clean:
-	rm -f *.o projeto
+	rm -f *.o backtracking time-backtracking
+
