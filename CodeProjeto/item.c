@@ -3,49 +3,51 @@
 #include "item.h"
 
 typedef struct item_{ 
-        int chave;   //indexador
-        void *dados; //ponteiro para o dado
-}ITEM;
+    int chave;   //indexador
+    void *dados; //ponteiro para o dado
+} ITEM;
 
 ITEM *item_criar (int chave, void *dado){
-          ITEM *item;
-          
-          item = (ITEM *) malloc(sizeof(ITEM));
-          
-          if (item != NULL){
-             item->chave = chave;
-             item->dados = dado;
-             return(item);
-          }
-          return(NULL);
+    ITEM *item = (ITEM *) malloc(sizeof(ITEM));
+           
+    if (item != NULL){
+        item->chave = chave;
+        item->dados = dado;
+    }
+    return(item);
 }
 
 bool item_apagar(ITEM **item){
-   if (*item != NULL){
-      free (*item);
-      *item = NULL; /*Boa pr�tica!*/
-      return(true);
-   }
-   return(false);
+	if (*item == NULL) {
+		return(false);
+	}
+
+    free (*item);
+    *item = NULL; 
+    return(true);
 }
 
 int item_get_chave(ITEM *item){
-    if (item != NULL)
-      return(item->chave);
-    exit(1);
+    if (item == NULL) {
+		exit(1);
+	}
+
+    return(item->chave);
 }
 
 
 bool item_set_chave(ITEM *item, int chave){
-  if (item != NULL){
+	if (item == NULL) {
+		return(false);
+	}
+
     item->chave = chave;
     return (true);
-  }
-  return (false);
 }
 
 void *item_get_dados(ITEM *item){
-  if(item !=NULL)
-    return(item->dados);
-  return(NULL);
+	if (item == NULL) {
+		return(NULL);
+	}
+	return(item->dados);
 }

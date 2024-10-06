@@ -23,9 +23,7 @@ int encontrarDistancia(Aresta arestas[], int numArestas, int cidadeA, int cidade
 }
 
 // Função recursiva para explorar todas as rotas (backtracking)
-void explorarRotas(Aresta arestas[], int numArestas, int numCidades, PILHA* pilha, 
-                   bool visitado[], int cidadeAtual, int custoAtual, int* menorCusto, PILHA* melhorRota) {
-    
+void explorarRotas(Aresta arestas[], int numArestas, int numCidades, PILHA* pilha, bool visitado[], int cidadeAtual, int custoAtual, int* menorCusto, PILHA* melhorRota) {
     if (pilha_tamanho(pilha) == numCidades - 1) {
         // Verifica se é um ciclo completo e calcula o custo de retorno à cidade de origem
         int cidadeTopo = item_get_chave(pilha_topo(pilha));
