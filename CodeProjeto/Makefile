@@ -1,8 +1,8 @@
 all: projeto.o pilha.o item.o
 	gcc -Wall -std=c99 projeto.o pilha.o item.o -o projeto
 
-projeto.o: projeto1alg.c pilha.h item.h
-	gcc -c projeto1alg.c
+projeto.o: projeto.c pilha.h item.h
+	gcc -c projeto.c
 
 item.o: item.c item.h
 	gcc -c item.c
