@@ -20,7 +20,7 @@ int pilha_tamanho(PILHA *pilha);
 ITEM *pilha_topo(PILHA *pilha);
 bool pilha_empilhar(PILHA *pilha, ITEM *item);
 ITEM *pilha_desempilhar(PILHA *pilha);
-
+void pilha_limpar(PILHA *pilha);
 void pilha_print(PILHA *pilha);
 void pilha_inverter(PILHA *pilha);
 

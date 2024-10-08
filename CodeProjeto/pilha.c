@@ -14,6 +14,8 @@ ITEM* pilha_topo(PILHA* pilha);
 bool pilha_empilhar(PILHA* pilha, ITEM* item);
 ITEM* pilha_desempilhar(PILHA* pilha);
 
+void pilha_limpar(PILHA *pilha);
+
 void pilha_print(PILHA* pilha);
 void pilha_inverter(PILHA* pilha);
 
@@ -108,4 +110,16 @@ void pilha_print(PILHA *pilha){
         
         printf("%d - ", item_get_chave(pilha->item[i]));
     }
+}
+
+void pilha_limpar(PILHA *pilha){
+    if(pilha == NULL){
+        return;
+    }
+    for(int i=0; i < pilha->tamanho; i++){
+        item_apagar(&(pilha->item[i]));
+        free(pilha->item[i]);
+    }
+
+    pilha->tamanho=0;
 }
