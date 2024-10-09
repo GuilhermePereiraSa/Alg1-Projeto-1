@@ -30,50 +30,6 @@ int encontrar_distancia(int cidadeA, int cidadeB) {
     return INT_MAX; // Se não encontrar, retorna um valor grande (infinito)
 }
 
-// Função para ler os dados do arquivo
-LISTA *ler_arquivo(const char *nome_arquivo) {
-    FILE *file = fopen(nome_arquivo, "r");
-    if (!file) {
-        printf("Erro ao abrir o arquivo.\n");
-        return NULL;
-    }
-
-    int cidadeOrigem, numArestas;
-    fscanf(file, "%d", &num_cidades);  // Lê o número de cidades
-    fscanf(file, "%d", &cidadeOrigem); // Lê a cidade de origem
-    fscanf(file, "%d", &numArestas);   // Lê o número de arestas
-
-
-    // Verifica se o número de cidades é válido
-    if (num_cidades > MAX_CIDADES) {
-        printf("Número de cidades excede o limite máximo de %d.\n", MAX_CIDADES);
-        fclose(file);
-        return NULL;
-    }
-
-    // Lê as arestas e distâncias
-    for (int i = 0; i < numArestas; i++) {
-        int cidadeA, cidadeB, distancia;
-        fscanf(file, "%d %d %d", &cidadeA, &cidadeB, &distancia);
-        distancias[i].cidadeA = cidadeA;
-        distancias[i].cidadeB = cidadeB;
-        distancias[i].distancia = distancia;
-    }
-
-    // Inicializa a lista de cidades
-    LISTA *lista_cidades = lista_criar(ORDENADA);
-
-    // Preenche as cidades na lista
-    for (int i = 0; i < num_cidades; i++) {
-        // Criar um item com o nome da cidade
-        ITEM *item = item_criar(i, (void *)nomes_cidades[i]);
-        lista_inserir(lista_cidades, item);
-    }
-
-    fclose(file);
-    return lista_cidades;
-}
-
 // Função para calcular a distância total de uma rota
 int calcular_distancia_total(int *rota, int n) {
     int distancia_total = 0;
@@ -84,35 +40,29 @@ int calcular_distancia_total(int *rota, int n) {
     return distancia_total;
 }
 
-// Função para o Algoritmo de Vizinho Mais Próximo
-void caixeiro_viajante_vizinho_mais_proximo(int *rota, int n) {
-    int visitado[n];
-    for (int i = 0; i < n; i++) {
-        visitado[i] = 0;
-    }
-
-    int cidade_atual = 0;  // Começa pela primeira cidade
-    visitado[cidade_atual] = 1;
-    rota[0] = cidade_atual;
-
-    for (int i = 1; i < n; i++) {
-        int cidade_proxima = -1;
-        int menor_distancia = INT_MAX;
-
-        // Encontra a cidade mais próxima
-        for (int j = 0; j < n; j++) {
-            if (!visitado[j]) {
-                int distancia = encontrar_distancia(cidade_atual, j);
-                if (distancia < menor_distancia) {
-                    menor_distancia = distancia;
-                    cidade_proxima = j;
-                }
-            }
+// Função para gerar todas as permutações das cidades e calcular o menor custo
+void caixeiro_viajante_forca_bruta(int *rota, int l, int n, int *melhor_rota, int *menor_custo) {
+    if (l == n) {
+        int custo = calcular_distancia_total(rota, n);
+        if (custo < *menor_custo) {
+            *menor_custo = custo;
+            memcpy(melhor_rota, rota, n * sizeof(int)); // Copia a melhor rota encontrada
         }
+    } else {
+        for (int i = l; i < n; i++) {
+            // Troca as cidades de posição
+            int temp = rota[l];
+            rota[l] = rota[i];
+            rota[i] = temp;
 
-        rota[i] = cidade_proxima;
-        visitado[cidade_proxima] = 1;
-        cidade_atual = cidade_proxima;
+            // Gera a próxima permutação
+            caixeiro_viajante_forca_bruta(rota, l + 1, n, melhor_rota, menor_custo);
+
+            // Desfaz a troca (backtracking)
+            temp = rota[l];
+            rota[l] = rota[i];
+            rota[i] = temp;
+        }
     }
 }
 
@@ -132,9 +82,8 @@ int main() {
         return -1;
     }
 
-    int rota[n];
-
-    printf("Aqui!\n");
+    int rota[n], melhor_rota[n];
+    int menor_custo = INT_MAX;
 
     // Preenche a rota com os IDs das cidades
     ITEM *item;
@@ -145,20 +94,19 @@ int main() {
         }
     }
 
-    // Aplica o algoritmo do Vizinho Mais Próximo
-    caixeiro_viajante_vizinho_mais_proximo(rota, n);
+    // Aplica o algoritmo de força bruta para encontrar a melhor rota
+    caixeiro_viajante_forca_bruta(rota, 0, n, melhor_rota, &menor_custo);
 
     // Exibe o melhor caminho encontrado
-    printf("Melhor Rota (Aproximação de Vizinho Mais Próximo): ");
+    printf("Melhor Rota (Força Bruta): ");
     for (int i = 0; i < n; i++) {
-        printf("%s -> ", nomes_cidades[rota[i]]);
+        printf("%s -> ", nomes_cidades[melhor_rota[i]]);
     }
     // Exibe o retorno à cidade inicial
-    printf("%s\n", nomes_cidades[rota[0]]);
+    printf("%s\n", nomes_cidades[melhor_rota[0]]);
 
-    // Calcula e exibe o custo total
-    int custo_total = calcular_distancia_total(rota, n);
-    printf("Custo Total: %d\n", custo_total);
+    // Exibe o custo total
+    printf("Custo Total: %d\n", menor_custo);
 
     // Limpeza
     lista_apagar(&lista_cidades);
