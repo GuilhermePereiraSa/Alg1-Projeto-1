@@ -43,6 +43,7 @@ LISTA *ler_arquivo(const char *nome_arquivo) {
     fscanf(file, "%d", &cidadeOrigem); // Lê a cidade de origem
     fscanf(file, "%d", &numArestas);   // Lê o número de arestas
 
+
     // Verifica se o número de cidades é válido
     if (num_cidades > MAX_CIDADES) {
         printf("Número de cidades excede o limite máximo de %d.\n", MAX_CIDADES);
@@ -132,6 +133,8 @@ int main() {
     }
 
     int rota[n];
+
+    printf("Aqui!\n");
 
     // Preenche a rota com os IDs das cidades
     ITEM *item;
