@@ -14,10 +14,21 @@ typedef struct {
     int distancia;
 } Aresta;
 
-// Matriz de distâncias entre cidades
-int distancias[MAX_CIDADES][MAX_CIDADES];
+// Vetor de distâncias entre cidades (em vez de usar uma matriz)
+Aresta distancias[MAX_CIDADES * (MAX_CIDADES - 1) / 2]; // Máximo de arestas possíveis
 char nomes_cidades[MAX_CIDADES][50];
 int num_cidades = 0;
+
+// Função para encontrar a distância entre duas cidades a partir do vetor de arestas
+int encontrar_distancia(int cidadeA, int cidadeB) {
+    for (int i = 0; i < num_cidades * (num_cidades - 1) / 2; i++) {
+        if ((distancias[i].cidadeA == cidadeA && distancias[i].cidadeB == cidadeB) || 
+            (distancias[i].cidadeA == cidadeB && distancias[i].cidadeB == cidadeA)) {
+            return distancias[i].distancia;
+        }
+    }
+    return INT_MAX; // Se não encontrar, retorna um valor grande (infinito)
+}
 
 // Função para ler os dados do arquivo
 LISTA *ler_arquivo(const char *nome_arquivo) {
@@ -27,33 +38,32 @@ LISTA *ler_arquivo(const char *nome_arquivo) {
         return NULL;
     }
 
-    int numCidades, cidadeOrigem, numArestas;
-    fscanf(file, "%d", &numCidades);  // Lê o número de cidades
+    int cidadeOrigem, numArestas;
+    fscanf(file, "%d", &num_cidades);  // Lê o número de cidades
     fscanf(file, "%d", &cidadeOrigem); // Lê a cidade de origem
-    fscanf(file, "%d", &numArestas);  // Lê o número de arestas
+    fscanf(file, "%d", &numArestas);   // Lê o número de arestas
 
     // Verifica se o número de cidades é válido
-    if (numCidades > MAX_CIDADES) {
+    if (num_cidades > MAX_CIDADES) {
         printf("Número de cidades excede o limite máximo de %d.\n", MAX_CIDADES);
         fclose(file);
         return NULL;
     }
 
     // Lê as arestas e distâncias
-    Aresta arestas[numArestas];
     for (int i = 0; i < numArestas; i++) {
-        fscanf(file, "%d %d %d", &arestas[i].cidadeA, &arestas[i].cidadeB, &arestas[i].distancia);
-
-        // Armazena as distâncias na matriz
-        distancias[arestas[i].cidadeA][arestas[i].cidadeB] = arestas[i].distancia;
-        distancias[arestas[i].cidadeB][arestas[i].cidadeA] = arestas[i].distancia; // Distância simétrica
+        int cidadeA, cidadeB, distancia;
+        fscanf(file, "%d %d %d", &cidadeA, &cidadeB, &distancia);
+        distancias[i].cidadeA = cidadeA;
+        distancias[i].cidadeB = cidadeB;
+        distancias[i].distancia = distancia;
     }
 
     // Inicializa a lista de cidades
     LISTA *lista_cidades = lista_criar(ORDENADA);
 
     // Preenche as cidades na lista
-    for (int i = 0; i < numCidades; i++) {
+    for (int i = 0; i < num_cidades; i++) {
         // Criar um item com o nome da cidade
         ITEM *item = item_criar(i, (void *)nomes_cidades[i]);
         lista_inserir(lista_cidades, item);
@@ -67,9 +77,9 @@ LISTA *ler_arquivo(const char *nome_arquivo) {
 int calcular_distancia_total(int *rota, int n) {
     int distancia_total = 0;
     for (int i = 0; i < n - 1; i++) {
-        distancia_total += distancias[rota[i]][rota[i + 1]];
+        distancia_total += encontrar_distancia(rota[i], rota[i + 1]);
     }
-    distancia_total += distancias[rota[n - 1]][rota[0]]; // Retorno à cidade inicial
+    distancia_total += encontrar_distancia(rota[n - 1], rota[0]); // Retorno à cidade inicial
     return distancia_total;
 }
 
@@ -90,9 +100,12 @@ void caixeiro_viajante_vizinho_mais_proximo(int *rota, int n) {
 
         // Encontra a cidade mais próxima
         for (int j = 0; j < n; j++) {
-            if (!visitado[j] && distancias[cidade_atual][j] < menor_distancia) {
-                menor_distancia = distancias[cidade_atual][j];
-                cidade_proxima = j;
+            if (!visitado[j]) {
+                int distancia = encontrar_distancia(cidade_atual, j);
+                if (distancia < menor_distancia) {
+                    menor_distancia = distancia;
+                    cidade_proxima = j;
+                }
             }
         }
 
@@ -102,7 +115,7 @@ void caixeiro_viajante_vizinho_mais_proximo(int *rota, int n) {
     }
 }
 
-// Função para a função principal
+// Função principal
 int main() {
     const char *nome_arquivo = "cidades.txt";
 
@@ -135,9 +148,10 @@ int main() {
     // Exibe o melhor caminho encontrado
     printf("Melhor Rota (Aproximação de Vizinho Mais Próximo): ");
     for (int i = 0; i < n; i++) {
-        printf("%s ", nomes_cidades[rota[i]]);
+        printf("%s -> ", nomes_cidades[rota[i]]);
     }
-    printf("\n");
+    // Exibe o retorno à cidade inicial
+    printf("%s\n", nomes_cidades[rota[0]]);
 
     // Calcula e exibe o custo total
     int custo_total = calcular_distancia_total(rota, n);
