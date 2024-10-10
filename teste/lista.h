@@ -11,7 +11,7 @@
 
 	typedef struct lista_ LISTA;
 
-	LISTA *lista_criar(bool ordenada);
+	LISTA *lista_criar(void);
 	bool lista_inserir(LISTA *lista, ITEM *item);
 	void lista_apagar(LISTA **lista);
 

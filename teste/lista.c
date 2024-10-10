@@ -14,7 +14,7 @@ struct lista_ {
 
 ITEM *lista_frente(LISTA *lista);
 
-LISTA *lista_criar(bool ordenada);
+LISTA *lista_criar(void);
 
 void lista_apagar(LISTA **lista);
 
@@ -39,13 +39,13 @@ int lista_tamanho(LISTA *lista){
 
 void lista_imprimir(LISTA *lista);
 
-LISTA *lista_criar(bool ordenada) {
+LISTA *lista_criar(void) {
   LISTA *lista = (LISTA *)malloc(sizeof(LISTA));
   if (lista != NULL) {
     lista->inicio = 0;
     lista->fim = 0;
     lista->tamanho = 0;
-    lista->ordenada = ordenada;
+    //lista->ordenada = ordenada;
   }
   return lista;
 }
