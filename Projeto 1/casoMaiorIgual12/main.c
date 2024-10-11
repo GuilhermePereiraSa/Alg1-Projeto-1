@@ -54,7 +54,8 @@ void gera_caminhos(int vetor[], int ini, int fim, int matriz[][12], int numCidad
         for(int i = ini; i <= fim; i++){
             troca(vetor, ini, i);
             gera_caminhos(vetor, ini + 1, fim, matriz, numCidades, caminho_menor_custo);
-            troca(vetor, ini, i); // Backtrack
+            troca(vetor, ini, i);  
+            // Backtrack
         }
     }
 }
