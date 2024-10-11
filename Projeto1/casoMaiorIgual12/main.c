@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <limits.h>
+#include <time.h>
 #include "lista.h"
 #include "aresta.h"
 #include "caminho.h"
@@ -82,6 +83,30 @@ void cria_matriz_distancias(LISTA* lista_input, int matriz[][12], int numArestas
 }
 
 /**
+ * Função para calcular o tempo de execução de uma função
+ * 
+ * @param func Ponteiro para a função a ser medida
+ * @param args Argumentos da função
+ */
+void analise_tempo_execucao(void (*func)(int[], int, int, int[][12], int, CAMINHO*), int vetor[], int ini, int fim, int matriz[][12], int numCidades, CAMINHO* caminho_menor_custo) {
+    // Marca o tempo de início
+    clock_t inicio = clock();
+
+    // Executa a função passada como parâmetro
+    func(vetor, ini, fim, matriz, numCidades, caminho_menor_custo);
+
+    // Marca o tempo de término
+    clock_t fim_tempo = clock();
+
+    // Calcula o tempo gasto
+    double tempo_gasto = (double)(fim_tempo - inicio) / CLOCKS_PER_SEC;
+
+    printf("Tempo de execução: %f segundos\n", tempo_gasto);
+}
+
+
+
+/**
  * Função principal que realiza a leitura dos dados do arquivo, cria lista de arestas, inicializa o caminho de menor custo e imprime o resultado
  */
 int main(void){
@@ -117,5 +142,9 @@ int main(void){
     printf("%d\n", vet_caminho_menor_custo[0]);
 
     free(vet_cidades);
+
+    // Comente a analise qualquer coisa.
+    analise_tempo_execucao(gera_caminhos, vet_cidades, 0, numCidades - 1, matriz, numCidades, caminho_menor_custo);
+
     return 0;
 }

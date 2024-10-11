@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+
+#include <time.h>
+
 #include "lista.h"
 #include "aresta.h"
 
@@ -90,8 +93,26 @@ void cria_matriz_distancias(LISTA* lista_input, int matriz[][12], int numArestas
 }
 
 /**
- * Função principal que realiza a leitura dos dados do arquivo, cria lista de arestas, inicializa o caminho de menor custo e imprime o resultado
+ * Função para medir o tempo de execução do backtracking
  */
+double medir_tempo_backtracking(int* vetor, int matriz[][12], int numCidades, int* melhor_custo, int* melhor_percurso) {
+    clock_t inicio, fim;
+    double tempo_gasto;
+
+    // Início da contagem de tempo
+    inicio = clock();
+
+    // Executa o backtracking
+    backtracking(vetor, 1, matriz, numCidades, 0, melhor_custo, melhor_percurso);
+
+    // Fim da contagem de tempo
+    fim = clock();
+
+    // Calcula o tempo gasto
+    tempo_gasto = ((double) (fim - inicio)) / CLOCKS_PER_SEC;
+    return tempo_gasto;
+}
+
 int main(void) {
     int numCidades, cidadeOrigem, numArestas;
     scanf("%d %d %d", &numCidades, &cidadeOrigem, &numArestas);
@@ -112,8 +133,11 @@ int main(void) {
 
     // Gera os caminhos
     int* vet_cidades = cria_vetor(numCidades, cidadeOrigem); // Passa a cidade de origem
-    backtracking(vet_cidades, 1, matriz, numCidades, 0, &melhor_custo, vet_caminho_menor_custo); // Começa a permutação a partir da segunda cidade
 
+    // Mede o tempo do backtracking
+    double tempo_gasto = medir_tempo_backtracking(vet_cidades, matriz, numCidades, &melhor_custo, vet_caminho_menor_custo);
+
+    // Imprime os resultados
     printf("O custo do menor caminho é: %d\n", melhor_custo);
     printf("O percurso é: ");
     for (int i = 0; i < numCidades; i++) {
@@ -121,6 +145,9 @@ int main(void) {
     }
     printf("%d\n", vet_caminho_menor_custo[0]);
 
+    printf("Tempo gasto pelo backtracking: %.6f segundos\n", tempo_gasto);
+
+    // Libera memória alocada
     free(vet_cidades);
     free(vet_caminho_menor_custo);
     return 0;
