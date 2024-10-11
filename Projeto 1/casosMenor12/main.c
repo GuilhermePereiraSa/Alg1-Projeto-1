@@ -205,6 +205,7 @@ int main(void){
 
 	vet_caminho_menor_custo = caminho_get_percurso(caminho_menor_custo);
 
+	printf("Cidade de origem: %d", cidadeOrigem);
 	printf("O custo do menor caminho e: %d\n", caminho_get_custo(caminho_menor_custo));
 	printf("O percurso e: ");
 	for(int i = 0; i < numCidades; i++){
