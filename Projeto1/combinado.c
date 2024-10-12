@@ -183,6 +183,22 @@ void busca_menor_custo(LISTA* lista_input, int numCidades, int cidadeOrigem, int
 	gera_caminhos(vet_cidades, 0, numCidades-1, lista_input, numCidades, cidadeOrigem, numArestas, caminho_menor_custo);
 }
 
+
+/**
+ * Essa função cria um vetor para armazenar as cidades do percurso, com a cidade de origem fixada no início
+ */
+int* cria_vetor_backtracking(int numCidade, int cidadeOrigem) {
+    int* vetor = (int*) malloc(sizeof(int) * numCidade);
+    vetor[0] = cidadeOrigem; // A cidade de origem é colocada na primeira posição
+    int index = 1;
+    for (int i = 1; i <= numCidade; i++) {
+        if (i != cidadeOrigem) {
+            vetor[index++] = i;
+        }
+    }
+    return vetor;
+}
+
 /**
  * Função recursiva responsável por gerar as permutações e calcular o menor caminho
  * utilizando a técnica de backtracking
@@ -262,34 +278,32 @@ int main(void){
 		lista_inserir(lista_input, aresta_criar(tmp_cidade_A, tmp_cidade_B, tmp_distancia, i));
 	}
 
-  if(numCidades < 11){
-    busca_menor_custo(lista_input, numCidades, cidadeOrigem, numArestas, caminho_menor_custo);
+	printf("Cidade de origem: %d\n", cidadeOrigem);
 
-	  vet_caminho_menor_custo = caminho_get_percurso(caminho_menor_custo);
-  } else{
-    // Cria matriz de distâncias
-    int matriz[12][12];
-    cria_matriz_distancias(lista_input, matriz, numArestas);
+	if(numCidades < 11){
+		busca_menor_custo(lista_input, numCidades, cidadeOrigem, numArestas, caminho_menor_custo);
 
-    // Gera os caminhos
-    int* vet_cidades = cria_vetor(numCidades, cidadeOrigem); // Passa a cidade de origem
-    backtracking(vet_cidades, 1, matriz, numCidades, 0, &melhor_custo, vet_caminho_menor_custo); // Começa a permutação a partir da segunda cidade
-  }
+		vet_caminho_menor_custo = caminho_get_percurso(caminho_menor_custo);
 
-	
+		printf("O custo do menor caminho e: %d\n", caminho_get_custo(caminho_menor_custo));
+	} else{
+		// Cria matriz de distâncias
+		int melhor_custo = INT_MAX;
+		int matriz[12][12];
+		cria_matriz_distancias(lista_input, matriz, numArestas);
 
-	printf("Cidade de origem: %d", cidadeOrigem);
-	printf("O custo do menor caminho e: %d\n", caminho_get_custo(caminho_menor_custo));
+		// Gera os caminhos
+		int* vet_cidades = cria_vetor_backtracking(numCidades, cidadeOrigem); // Passa a cidade de origem
+		backtracking(vet_cidades, 1, matriz, numCidades, 0, &melhor_custo, vet_caminho_menor_custo); // Começa a permutação a partir da segunda cidade
+
+		printf("O custo do menor caminho é: %d\n", melhor_custo);
+	}
+
 	printf("O percurso e: ");
 	for(int i = 0; i < numCidades; i++){
 		printf("%d-", vet_caminho_menor_custo[i]);
 	}
 	printf("%d\n", cidadeOrigem);
-
-  if(numCidades >= 11){
-    free(vet_cidades);
-  }
-  free(vet_caminho_menor_custo);
-
+	
 	return 0;
 }
